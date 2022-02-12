@@ -77,7 +77,7 @@ router.post('/login', async (req, res, next) => {
 
     res.json({
       token,
-      user: { email, subscription },
+      user: { email },
     });
   } catch (error) {
     next(error);
