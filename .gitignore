@@ -1,3 +1,6 @@
+#ignore all . folders
+.*/
+
 #Junk
 .DS_Store
 .vscode/
@@ -123,12 +126,10 @@ dist
 .tern-port
 
 #prettierrc
-.prettierrc.json
-.prettierrc.yarn
+.prettierrc.*
 
 #git
 #.gitignore
+#README.md
 
-README.md
-
-#nodemon.json
+nodemon.json
