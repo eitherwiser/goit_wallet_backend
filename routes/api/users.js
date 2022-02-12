@@ -8,8 +8,8 @@ const { Conflict, Unauthorized, BadRequest, NotFound } = require('http-errors');
 
 require('dotenv').config();
 const { SECRET_KEY, SITE_NAME, PORT } = process.env;
-const { User } = require('../../models/');
-const { authenticate, upload } = require('../../middlewares/');
+const { User } = require('../../models');
+const { authenticate, upload } = require('../../middlewares');
 const { avatarsDir } = require('../../constants/');
 const { renameFile, imgNormalize, sendEmail } = require('../../helpers/');
 
