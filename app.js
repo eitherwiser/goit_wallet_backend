@@ -1,16 +1,22 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+const swaggerUI = require('swagger-ui-express');
+
+const swaggerDocument = require('./swagger.json');
+const { usersRouter } = require('./routes/');
+const { joiUserValidation } = require('./middlewares/');
 
 const app = express();
-
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-//app.use('/api/users'); //?  '/users'
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
+app.use('/api/users', joiUserValidation, usersRouter);
 
 app.use(express.static('public'));
 
