@@ -31,21 +31,21 @@ const errorWrapper = validationResult => {
   }
 };
 
-const joiUserValidation = (req, res, next) => {
+const joiUserValidation = async (req, res, next) => {
   if (req.method === 'POST') {
     if (req.originalUrl === '/api/users/signup') {
-      errorWrapper(userSignup.validate(req.body));
+      await errorWrapper(userSignup.validate(req.body));
     }
     if (req.originalUrl === '/api/users/login') {
-      errorWrapper(userLogin.validate(req.body));
+      await errorWrapper(userLogin.validate(req.body));
     }
     if (req.originalUrl === '/api/users/verify') {
-      errorWrapper(emailVerification.validate(req.body));
+      await errorWrapper(emailVerification.validate(req.body));
     }
   }
   if (req.method === 'PATCH') {
     if (req.originalUrl === '/api/users/') {
-      errorWrapper(userSubscription.validate(req.body));
+      await errorWrapper(userSubscription.validate(req.body));
     }
   }
   next();
