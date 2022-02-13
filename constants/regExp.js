@@ -6,7 +6,11 @@ const phoneRegExp =
 const emailRegExp =
   /^((?![._-])[a-zA-Z0-9]{0,1}?)+([._-]?[a-zA-Z0-9]{0,64}?)+((?![._-])[a-zA-Z0-9]{1}?)+@((?![._-])[a-zA-Z0-9]{0,1}?)+([._:-]?[a-zA-Z0-9]{0,32}?)+((?![._-])[a-zA-Z0-9]{0,1})+(\.[a-zA-Z0-9]{2,3})$/;
 
+const userNameRegExp =
+  /^[a-zA-Z]{2,16}(?: ([a-zA-Z]{1,16}))?(?: ([a-zA-Z]{2,16}))?$/;
+
 module.exports = {
   phoneRegExp,
   emailRegExp,
+  userNameRegExp,
 };

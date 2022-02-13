@@ -1,13 +1,14 @@
 // validation
-const { phoneRegExp, emailRegExp } = require('./regExp.js');
+const { phoneRegExp, emailRegExp, userNameRegExp } = require("./regExp.js");
 
 // directories
-const { tempDir, avatarsDir } = require('./directories.js');
+const { tempDir, avatarsDir } = require("./directories.js");
 
 module.exports = {
   // validation
   phoneRegExp,
   emailRegExp,
+  userNameRegExp,
   // directories
   tempDir,
   avatarsDir,

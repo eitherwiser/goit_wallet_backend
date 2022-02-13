@@ -1,24 +1,29 @@
-const { Schema, model } = require('mongoose');
-const bcrypt = require('bcryptjs');
-const gravatar = require('gravatar');
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcryptjs");
+const gravatar = require("gravatar");
 
-const { emailRegExp } = require('../constants/');
+const { emailRegExp, userNameRegExp } = require("../constants/");
 
 const userSchema = Schema(
   {
     password: {
       type: String,
-      required: [true, 'Password is required'],
+      required: [true, " is required"],
     },
     email: {
       type: String,
       match: emailRegExp,
-      required: [true, 'Email is required'],
+      required: [true, " is required"],
       unique: true,
+    },
+    userName: {
+      type: String,
+      match: userNameRegExp,
+      required: [true, " is required"],
     },
     avatarURL: {
       type: String,
-      default: 'public\\no-picture.svg',
+      default: "public\\no-picture.svg",
     },
     token: {
       type: String,
@@ -30,10 +35,10 @@ const userSchema = Schema(
     },
     verificationToken: {
       type: String,
-      required: [true, 'Verify token is required'],
+      required: [true, "Verify token is required"],
     },
   },
-  { versionKey: false, timestamps: true },
+  { versionKey: false, timestamps: true }
 );
 
 userSchema.methods.setPassword = async function (password) {
@@ -47,9 +52,9 @@ userSchema.methods.setPassword = async function (password) {
 userSchema.methods.setAvatarURL = async function (email) {
   try {
     this.avatarURL = await gravatar.url(email, {
-      protocol: 'http',
-      s: '250',
-      d: 'retro',
+      protocol: "http",
+      s: "250",
+      d: "retro",
     });
   } catch (error) {
     throw new Error(error.message);
@@ -60,6 +65,6 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compareSync(password, this.password);
 };
 
-const User = model('user', userSchema);
+const User = model("user", userSchema);
 
 module.exports = User;
