@@ -2,13 +2,21 @@ const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 const gravatar = require("gravatar");
 
-const { emailRegExp, userNameRegExp } = require("../constants/");
+const {
+  emailRegExp,
+  userNameRegExp,
+  transactionCategories,
+} = require("../constants");
 
 const userSchema = Schema(
   {
     password: {
       type: String,
       required: [true, " is required"],
+    },
+    token: {
+      type: String,
+      default: null,
     },
     email: {
       type: String,
@@ -25,17 +33,21 @@ const userSchema = Schema(
       type: String,
       default: "public\\no-picture.svg",
     },
-    token: {
-      type: String,
-      default: null,
+    balance: {
+      type: Number,
+      default: 0,
     },
-    verify: {
-      type: Boolean,
-      default: false,
+    transactionCategories: {
+      type: Array,
+      default: transactionCategories,
     },
     verificationToken: {
       type: String,
       required: [true, "Verify token is required"],
+    },
+    verify: {
+      type: Boolean,
+      default: false,
     },
   },
   { versionKey: false, timestamps: true }
