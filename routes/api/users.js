@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const fs = require("fs/promises");
-const { randomUUID } = require("crypto");
+//const { randomUUID } = require("crypto");
 const { Conflict, Unauthorized, BadRequest, NotFound } = require("http-errors");
 
 require("dotenv").config();
@@ -16,16 +16,16 @@ const { renameFile, imgNormalize, sendEmail } = require("../../helpers/");
 // signup user
 router.post("/signup", async (req, res, next) => {
   try {
-    const { email, password, userName, subscription } = req.body;
+    const { email, password, userName } = req.body;
     const result = await User.findOne({ email });
     if (result) {
       throw new Conflict("Email in use");
     }
-    const verificationToken = await randomUUID();
+    //const verificationToken = await randomUUID();
+    const verificationToken = await Date.now();
     const newUser = new User({
       email,
       userName,
-      subscription,
       verificationToken,
     });
     await newUser.setPassword(password);
@@ -43,7 +43,6 @@ router.post("/signup", async (req, res, next) => {
       user: {
         userName,
         email: newUser.email,
-        subscription: newUser.subscription,
       },
     });
   } catch (error) {
@@ -76,14 +75,14 @@ router.post("/login", async (req, res, next) => {
       throw new Unauthorized("Email or password is wrong");
     }
 
-    const { _id, subscription } = user;
+    const { _id } = user;
     const payload = { id: _id };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
     await User.findByIdAndUpdate(_id, { token });
 
     res.json({
       token,
-      user: { email },
+      user: { email, userName },
     });
   } catch (error) {
     next(error);
@@ -97,44 +96,6 @@ router.get("/logout", authenticate, async (req, res, next) => {
     await User.findByIdAndUpdate({ _id }, { token: null });
 
     res.status(204).json();
-  } catch (error) {
-    next(error);
-  }
-});
-
-// subscription
-router.get("/current", authenticate, async (req, res, next) => {
-  try {
-    const { email, subscription } = req.user;
-
-    res.status(200).json({
-      email,
-      subscription,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.patch("/", authenticate, async (req, res, next) => {
-  try {
-    const { _id } = req.user;
-    const { subscription } = req.body;
-    const newSubscription = await User.findOneAndUpdate(
-      { _id },
-      { subscription },
-      {
-        new: true,
-        select: "-createdAt -updatedAt -password -token",
-      }
-    );
-
-    res.status(200).json({
-      status: "updated",
-      code: 200,
-      message: `subscription updated to ${subscription}`,
-      data: { User: newSubscription },
-    });
   } catch (error) {
     next(error);
   }
@@ -158,7 +119,7 @@ router.patch(
         { avatarURL },
         {
           new: true,
-          select: "-createdAt -updatedAt -password -subscription -token",
+          select: "-createdAt -updatedAt -password -token",
         }
       );
 
