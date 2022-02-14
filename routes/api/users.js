@@ -10,7 +10,7 @@ require("dotenv").config();
 const { SECRET_KEY, SITE_NAME, PORT } = process.env;
 const { User } = require("../../models");
 const { authenticate, upload } = require("../../middlewares");
-const { avatarsDir } = require("../../constants/");
+const { avatarsDir, transactionCategories } = require("../../constants/");
 const { renameFile, imgNormalize, sendEmail } = require("../../helpers/");
 
 // signup user
@@ -41,7 +41,7 @@ router.post("/signup", async (req, res, next) => {
 
     res.status(201).json({
       user: {
-        userName,
+        userName: newUser.userName,
         email: newUser.email,
       },
     });
@@ -82,7 +82,12 @@ router.post("/login", async (req, res, next) => {
 
     res.json({
       token,
-      user: { email, userName },
+      user: {
+        email: user.email,
+        userName: user.userName,
+        balance: user.balance,
+        transactionCategories: user.transactionCategories,
+      },
     });
   } catch (error) {
     next(error);
