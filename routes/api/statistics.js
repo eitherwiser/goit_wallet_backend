@@ -2,10 +2,7 @@ const express = require("express");
 const { BadRequest } = require("http-errors");
 const router = express.Router();
 
-const {
-  joiTransactionStatisticValidation,
-  authenticate,
-} = require("../../middlewares");
+const { joiStatisticValidation, authenticate } = require("../../middlewares");
 
 const { Transaction } = require("../../models");
 
@@ -18,7 +15,7 @@ const {
 за месяц и год по транзакциям пользователя*/
 router.get("/", authenticate, async (req, res, next) => {
   try {
-    const { error } = joiTransactionStatisticValidation.validate(req.body);
+    const { error } = joiStatisticValidation.validate(req.body);
     if (error) {
       throw new BadRequest(error.message);
     }
