@@ -57,7 +57,8 @@ userSchema.methods.setPassword = async function (password) {
   try {
     this.password = await bcrypt.hashSync(password, bcrypt.genSaltSync(10));
   } catch (error) {
-    throw new Error(error.message);
+    console.log(error.message);
+    throw new Error("Failed to set a password");
   }
 };
 
@@ -66,10 +67,11 @@ userSchema.methods.setAvatarURL = async function (email) {
     this.avatarURL = await gravatar.url(email, {
       protocol: "http",
       s: "250",
-      d: "retro",
+      d: "wavatar",
     });
   } catch (error) {
-    throw new Error(error.message);
+    console.log(error.message);
+    throw new Error("Failed to generate Avatar image");
   }
 };
 

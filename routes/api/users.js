@@ -19,7 +19,7 @@ router.post("/signup", async (req, res, next) => {
     const { email, password, userName } = req.body;
     const result = await User.findOne({ email });
     if (result) {
-      throw new Conflict("Email in use");
+      throw new Conflict("Provided email already in use");
     }
     //const verificationToken = await randomUUID();
     const verificationToken = await Date.now();
@@ -40,9 +40,13 @@ router.post("/signup", async (req, res, next) => {
     await sendEmail(data);
 
     res.status(201).json({
-      user: {
+      message: "User created",
+      data: {
+        _id: newUser._id,
         userName: newUser.userName,
         email: newUser.email,
+        avatar: newUser.avatarURL,
+        verify: newUser.verify,
       },
     });
   } catch (error) {
@@ -62,12 +66,12 @@ router.post("/login", async (req, res, next) => {
       const data = {
         to: email,
         subject: "Confirmation of registration",
-        html: `<a target="_blank" href="${SITE_NAME}:${PORT}/api/${user.verificationToken}">Click to confirm registration</a>  `,
+        html: `<a target="_blank" href="${SITE_NAME}:${PORT}/api/users/verify/${user.verificationToken}">Click to confirm registration</a>  `,
       };
       await sendEmail(data);
 
       throw new Unauthorized(
-        `User not validating, check  ${email} for "Confirmation of registration" request`
+        `User not validating, check  '${email}' for 'Confirmation of registration' request`
       );
     }
     const passwordCompare = await user.comparePassword(password);
@@ -80,16 +84,42 @@ router.post("/login", async (req, res, next) => {
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
     await User.findByIdAndUpdate(_id, { token });
 
-    res.json({
-      token,
-      user: {
+    res.status(200).json({
+      message: "You have logged in",
+      data: {
+        token,
         email: user.email,
         userName: user.userName,
+        avatar: user.avatarURL,
         balance: user.balance,
         transactionCategories: user.transactionCategories,
       },
     });
   } catch (error) {
+    next(error);
+  }
+});
+
+//current user
+router.get("/current", authenticate, async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    console.log(_id);
+    const user = await User.findById(_id);
+
+    res.status(200).json({
+      message: `User data '${new Date()}'`,
+      data: {
+        token: user.token,
+        email: user.email,
+        userName: user.userName,
+        avatar: user.avatarURL,
+        balance: user.balance,
+        transactionCategories: user.transactionCategories,
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
     next(error);
   }
 });
@@ -101,6 +131,53 @@ router.get("/logout", authenticate, async (req, res, next) => {
     await User.findByIdAndUpdate({ _id }, { token: null });
 
     res.status(204).json();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// verification email
+router.post("/verify", async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    if (!email) {
+      throw new BadRequest("Missing required field email");
+    }
+    const user = User.findOne({ email });
+    if (!user) {
+      throw new NotFound("User not found");
+    }
+    const { verify, verificationToken } = user;
+    if (verify) {
+      throw new BadRequest("The verification already done");
+    }
+    const data = {
+      to: email,
+      subject: "Confirmation of registration",
+      html: `<a target="_blank" href="${SITE_NAME}:${PORT}/api/${verificationToken}">Click to confirm registration</a>  `,
+    };
+    await sendEmail(data);
+
+    res.status(200).json("Verification email sent");
+  } catch (error) {
+    next(error);
+  }
+});
+
+// verification token
+router.get("/verify/:verificationToken", async (req, res, next) => {
+  try {
+    const { verificationToken } = req.params;
+    const user = await User.findOne({ verificationToken });
+    if (!user) {
+      throw new NotFound("User not found");
+    }
+    await User.findByIdAndUpdate(user._id, {
+      verificationToken: null,
+      verify: true,
+    });
+
+    res.status(200).json("Verification successful");
   } catch (error) {
     next(error);
   }
@@ -129,8 +206,7 @@ router.patch(
       );
 
       res.status(200).json({
-        status: "updated",
-        code: 200,
+        message: "Image updated",
         data: { User: avatarURL },
       });
     } catch (error) {
@@ -138,59 +214,5 @@ router.patch(
     }
   }
 );
-
-// verification
-router.post("/verify", async (req, res, next) => {
-  const { email } = req.body;
-  try {
-    if (!email) {
-      throw new BadRequest("missing required field email");
-    }
-    const user = User.findOne({ email });
-    if (!user) {
-      throw new NotFound("User not found");
-    }
-    const { verify, verificationToken } = user;
-    if (verify) {
-      throw new BadRequest("The verification already done");
-    }
-    const data = {
-      to: email,
-      subject: "Confirmation of registration",
-      html: `<a target="_blank" href="${SITE_NAME}:${PORT}/api/${verificationToken}">Click to confirm registration</a>  `,
-    };
-    await sendEmail(data);
-
-    res.status(200).json({
-      status: "success",
-      code: 200,
-      message: "Verification email sent",
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/verify/:verificationToken", async (req, res, next) => {
-  try {
-    const { verificationToken } = req.params;
-    const user = await User.findOne({ verificationToken });
-    if (!user) {
-      throw new NotFound("User not found");
-    }
-    await User.findByIdAndUpdate(user._id, {
-      verificationToken: null,
-      verify: true,
-    });
-
-    res.status(200).json({
-      status: "success",
-      code: 200,
-      mesage: "Verification successful",
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
 module.exports = router;
