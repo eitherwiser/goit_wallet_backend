@@ -3,7 +3,11 @@ const logger = require("morgan");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 
-const { usersRouter, transactionsRouter } = require("./routes/");
+const {
+  usersRouter,
+  transactionsRouter,
+  statisticsRouter,
+} = require("./routes/");
 const { joiUserValidation } = require("./middlewares/");
 const swaggerDoc = require("./swagger.json");
 
@@ -16,6 +20,7 @@ app.use(express.json());
 
 app.use("/api/users", joiUserValidation, usersRouter);
 app.use("/api/transactions", transactionsRouter);
+app.use("/api/statistics", statisticsRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use(express.static("public"));
