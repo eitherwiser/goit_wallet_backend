@@ -803,7 +803,7 @@
         }
       }
     },
-    "/api/transactions/add": {
+    "/api/transactions": {
       "post": {
         "tags": ["Transactions"],
         "summary": "Create a new transaction",
@@ -903,7 +903,7 @@
         }
       }
     },
-    "/api/transactions": {
+    "/api/transactions/": {
       "get": {
         "tags": ["Transactions"],
         "summary": "Get all transactions. Can be filtered by month and year",
@@ -913,8 +913,41 @@
             "description": "Successful operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/transaction"
+                "type": "object",
+                "example": {
+                  "balance": 1400000,
+                  "transactions": [
+                    {
+                      "id": "someHASH",
+                      "owner": "UserId",
+                      "date": 1644926173283,
+                      "isIncome": true,
+                      "categoryId": "someHASH",
+                      "comment": "Winning the lottery",
+                      "amount": 1000000,
+                      "balance": 1400000
+                    },
+                    {
+                      "id": "someHASH",
+                      "owner": "UserId",
+                      "date": 1644926173600,
+                      "isIncome": false,
+                      "categoryId": "someHASH",
+                      "comment": "By icecream",
+                      "amount": 50,
+                      "balance": 1399950
+                    },
+                    {
+                      "id": "someHASH",
+                      "owner": "UserId",
+                      "date": 1644926174561,
+                      "isIncome": false,
+                      "categoryId": "someHASH",
+                      "comment": "Travel",
+                      "amount": 1000,
+                      "balance": 1398950
+                    }
+                  ]
                 }
               }
             }
@@ -967,6 +1000,27 @@
         "tags": ["Statistics"],
         "summary": "Get statistic per month by existing categories",
         "parameters": [],
+        "requestBody": {
+          "description": "Transaction's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "year": {
+                    "type": "string",
+                    "example": "2022"
+                  },
+                  "month": {
+                    "type": "string",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -1135,21 +1189,22 @@
       "AllStatistics": {
         "type": "object",
         "properties": {
-          "incomePerMonth": {
-            "type": "Number",
-            "example": 1400000
-          },
-          "spendPerMonth": {
-            "type": "Number",
-            "example": 240000
-          },
-          "spendCategories": {
+          "categories": {
             "type": "array",
             "example": "An array of objects 'categoryPerMonth' with spend sum"
           },
-          "incCategories": {
-            "type": "array",
-            "example": "An array of objects 'categoryPerMonth' with income sum"
+          "total": {
+            "type": "object",
+            "properties": {
+              "expense": {
+                "type": "number",
+                "example": 240000
+              },
+              "income": {
+                "type": "Number",
+                "example": 1400000
+              }
+            }
           }
         }
       },
