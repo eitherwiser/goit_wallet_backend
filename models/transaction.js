@@ -30,6 +30,7 @@ const transactionSchema = Schema(
     },
     comment: {
       type: String,
+      default: "",
     },
     owner: {
       type: SchemaTypes.ObjectId,

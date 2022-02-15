@@ -31,7 +31,7 @@ const transactionCategories = [
     id: "321323321",
     name: "Авто",
     isInc: false,
-    color: "#f888fff",
+    color: "#f888ff",
     isActive: true,
   },
   {
