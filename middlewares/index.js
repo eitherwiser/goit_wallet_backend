@@ -3,6 +3,7 @@ const authenticate = require("./authorization/authorization.js");
 const upload = require("./upload/uploadFile.js");
 const {
   joiTransactionValidation,
+  joiTransactionStatisticValidation,
 } = require("./validation/transactionValidation.js");
 
 module.exports = {
@@ -10,4 +11,5 @@ module.exports = {
   authenticate,
   upload,
   joiTransactionValidation,
+  joiTransactionStatisticValidation,
 };
