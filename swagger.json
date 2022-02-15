@@ -217,7 +217,7 @@
                         "email": "bill@domain.com",
                         "userName": "Bill",
                         "avatar": "https://path.to.image",
-                        "balance": 55200,
+                        "balance": 1400000,
                         "transactionCategories": [
                           {
                             "id": "321321321",
@@ -447,6 +447,119 @@
                     "message": {
                       "type": "string",
                       "example": "Email has not been verified"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/users/current": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "User authentication",
+        "parameters": [],
+        "requestBody": {
+          "description": "Authentication's object",
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "responses code",
+                      "example": "You have logged in"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "responses data",
+                      "example": {
+                        "token": "someHASH",
+                        "email": "bill@domain.com",
+                        "userName": "Bill",
+                        "avatar": "https://path.to.image",
+                        "balance": 1400000,
+                        "transactionCategories": [
+                          {
+                            "id": "321321321",
+                            "name": "Food",
+                            "isInc": false,
+                            "color": "#ffffff",
+                            "isActive": true
+                          },
+                          {
+                            "id": "321345621",
+                            "name": "Cloth",
+                            "isInc": false,
+                            "color": "#bbffff",
+                            "isActive": true
+                          },
+                          {
+                            "id": "387721321",
+                            "name": "Car",
+                            "isInc": false,
+                            "color": "#ff22ff",
+                            "isActive": true
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "No valid token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Field email must be a valid email"
                     }
                   }
                 }
