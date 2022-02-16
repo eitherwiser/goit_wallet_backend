@@ -7,7 +7,7 @@ const fs = require("fs/promises");
 const { Conflict, Unauthorized, BadRequest, NotFound } = require("http-errors");
 
 require("dotenv").config();
-const { SECRET_KEY, SITE_NAME, PORT } = process.env;
+const { SECRET_KEY, LOCAL_HOST, SITE_NAME, PORT } = process.env;
 const { User } = require("../../models");
 const { authenticate, upload } = require("../../middlewares");
 const { avatarsDir, transactionCategories } = require("../../constants/");
@@ -35,7 +35,9 @@ router.post("/signup", async (req, res, next) => {
     const data = {
       to: email,
       subject: "Confirmation of registration",
-      html: `<a target="_blank" href="${SITE_NAME}:${PORT}/api/users/verify/${verificationToken}">Click to confirm registration</a>  `,
+      html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
+      //html: `<a target="_blank" href="${SITE_NAME}/api/users/verify/${verificationToken}">Click to confirm registration</a>`,
+      //html: `<a target="_blank" href="${LOCAL_HOST}:${PORT}/api/users/verify/${user.verificationToken}">Click to confirm registration</a>  `,
     };
     await sendEmail(data);
 
@@ -66,12 +68,11 @@ router.post("/login", async (req, res, next) => {
       const data = {
         to: email,
         subject: "Confirmation of registration",
-        html: `<a target="_blank" href="${SITE_NAME}:${PORT}/api/users/verify/${user.verificationToken}">Click to confirm registration</a>  `,
       };
       await sendEmail(data);
 
       throw new Unauthorized(
-        `User not validating, check  '${email}' for 'Confirmation of registration' request`
+        `User not validating, check '${email}' for 'Confirmation of registration' request`
       );
     }
     const passwordCompare = await user.comparePassword(password);
@@ -154,7 +155,9 @@ router.post("/verify", async (req, res, next) => {
     const data = {
       to: email,
       subject: "Confirmation of registration",
-      html: `<a target="_blank" href="${SITE_NAME}:${PORT}/api/${verificationToken}">Click to confirm registration</a>  `,
+      html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
+      //html: `<a target="_blank" href="${SITE_NAME}/api/users/verify/${verificationToken}">Click to confirm registration</a>`,
+      //html: `<a target="_blank" href="${LOCAL_HOST}:${PORT}/api/users/verify/${user.verificationToken}">Click to confirm registration</a>  `,
     };
     await sendEmail(data);
 
