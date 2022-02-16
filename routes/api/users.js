@@ -35,8 +35,8 @@ router.post("/signup", async (req, res, next) => {
     const data = {
       to: email,
       subject: "Confirmation of registration",
-      //html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
-      html: `<a target="_blank" href="${SITE_NAME}/api/users/verify/${verificationToken}">Click to confirm registration</a>`,
+      html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
+      //html: `<a target="_blank" href="${SITE_NAME}/api/users/verify/${verificationToken}">Click to confirm registration</a>`,
       //html: `<a target="_blank" href="${LOCAL_HOST}:${PORT}/api/users/verify/${user.verificationToken}">Click to confirm registration</a>  `,
     };
     await sendEmail(data);
@@ -68,6 +68,9 @@ router.post("/login", async (req, res, next) => {
       const data = {
         to: email,
         subject: "Confirmation of registration",
+        html: `<a target="_blank" href="${SITE_NAME}/api/users/verify/${verificationToken}">Click to confirm registration</a>`,
+        //html: `<a target="_blank" href="${LOCAL_HOST}:${PORT}/api/users/verify/${user.verificationToken}">Click to confirm registration</a>  `,
+        //html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
       };
       await sendEmail(data);
 
@@ -144,7 +147,8 @@ router.post("/verify", async (req, res, next) => {
     if (!email) {
       throw new BadRequest("Missing required field email");
     }
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
+    console.log(user);
     if (!user) {
       throw new NotFound("User not found");
     }
@@ -155,9 +159,9 @@ router.post("/verify", async (req, res, next) => {
     const data = {
       to: email,
       subject: "Confirmation of registration",
-      //html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
       html: `<a target="_blank" href="${SITE_NAME}/api/users/verify/${verificationToken}">Click to confirm registration</a>`,
       //html: `<a target="_blank" href="${LOCAL_HOST}:${PORT}/api/users/verify/${user.verificationToken}">Click to confirm registration</a>  `,
+      //html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
     };
     await sendEmail(data);
 
