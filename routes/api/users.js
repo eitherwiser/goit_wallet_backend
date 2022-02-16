@@ -7,7 +7,7 @@ const fs = require("fs/promises");
 const { Conflict, Unauthorized, BadRequest, NotFound } = require("http-errors");
 
 require("dotenv").config();
-const { SECRET_KEY, LOCAL_HOST, SITE_NAME, PORT } = process.env;
+const { SECRET_KEY, TOKEN_TERM, LOCAL_HOST, SITE_NAME, PORT } = process.env;
 const { User } = require("../../models");
 const { authenticate, upload } = require("../../middlewares");
 const { avatarsDir, transactionCategories } = require("../../constants/");
@@ -85,7 +85,9 @@ router.post("/login", async (req, res, next) => {
 
     const { _id } = user;
     const payload = { id: _id };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign(payload, SECRET_KEY, {
+      expiresIn: `${TOKEN_TERM}`,
+    });
     await User.findByIdAndUpdate(_id, { token });
 
     res.status(200).json({
