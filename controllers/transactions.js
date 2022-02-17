@@ -3,8 +3,8 @@ const { Transaction, User } = require("../models");
 const { joiTransactionValidation } = require("../middlewares");
 const {
   countTheBalance,
-  // getTransactionsWithName,
-  // addCategoryIdName,
+  getTransactionsWithName,
+  addCategoryIdName,
 } = require("../helpers");
 
 const getAllTransactions = async (req, res, next) => {
@@ -18,19 +18,14 @@ const getAllTransactions = async (req, res, next) => {
       "-createdAt -updatedAt -year -month",
       { skip, limit: Number(limit) }
     );
-    // const categoryIdName = addCategoryIdName(transactionCategories);
-    // const TyransactionsWithName = getTransactionsWithName(
-    //   transaction,
-    //   categoryIdName
-    // );
-    // const data = {
-    //   balance: balance,
-    //   transactions: [...TyransactionsWithName],
-    // };
-
+    const categoryIdName = addCategoryIdName(transactionCategories);
+    const TyransactionsWithName = getTransactionsWithName(
+      transaction,
+      categoryIdName
+    );
     const data = {
       balance: balance,
-      transactions: [...transaction],
+      transactions: [...TyransactionsWithName],
     };
 
     res.json(data);
