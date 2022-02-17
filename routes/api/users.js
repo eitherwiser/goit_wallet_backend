@@ -35,9 +35,9 @@ router.post("/signup", async (req, res, next) => {
     const data = {
       to: email,
       subject: "Confirmation of registration",
-      html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
-      //html: `<a target="_blank" href="${SITE_NAME}/api/users/verify/${verificationToken}">Click to confirm registration</a>`,
+      html: `<a target="_blank" href="${SITE_NAME}/api/users/verify/${verificationToken}">Click to confirm registration</a>`,
       //html: `<a target="_blank" href="${LOCAL_HOST}:${PORT}/api/users/verify/${user.verificationToken}">Click to confirm registration</a>  `,
+      //html: `<a target="_blank" href="http://localhost:3000/verify/${verificationToken}">Click to confirm registration</a>`,
     };
     await sendEmail(data);
 
