@@ -16,13 +16,12 @@ const {
 за месяц и год по транзакциям пользователя*/
 router.get("/", authenticate, async (req, res, next) => {
   try {
-    const { error } = joiStatisticValidation.validate(req.body);
+    const { error } = joiStatisticValidation.validate(req.query);
     if (error) {
       throw new BadRequest(error.message);
     }
-
     const { _id, transactionCategories } = req.user;
-    const { year, month } = req.body;
+    const { year, month } = req.query;
 
     const transactions = await Transaction.find({
       owner: _id,
@@ -44,7 +43,7 @@ router.get("/", authenticate, async (req, res, next) => {
 
     const data = {
       category: categoryWithSum,
-      total: { Expence: totalExpence, Income: totalIncome },
+      total: { Expense: totalExpence, Income: totalIncome },
     };
 
     res.json(data);
