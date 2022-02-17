@@ -6,11 +6,16 @@ const imgNormalize = require("./file-system/imgNormalize.js");
 const sendEmail = require("./email/sendEmail.js");
 
 //transaction
+const { countTheBalance } = require("./transaction/countTheBalance");
+const {
+  getTransactionsWithName,
+} = require("./transaction/getTransactionsWithName");
+const { addCategoryIdName } = require("./transaction/addCategoryIdName");
+//statistic
 const { amountByCategory } = require("./statistic/amountByCategory");
 const {
   amountByTransactionType,
 } = require("./statistic/amountByTransactionType");
-const { countTheBalance } = require("./transaction/countTheBalance");
 const {
   addAmountToCategoryObj,
 } = require("./statistic/addAmountToCategoryObj");
@@ -23,6 +28,8 @@ module.exports = {
   sendEmail,
   //transaction
   countTheBalance,
+  getTransactionsWithName,
+  addCategoryIdName,
   //statistic
   amountByCategory,
   amountByTransactionType,

@@ -1,4 +1,4 @@
-function addAmountToCategoryObj(categories, obj) {
+const addAmountToCategoryObj = (categories, obj) => {
   const arrCategory = [];
   const arrOption = Object.entries(obj);
 
@@ -11,7 +11,7 @@ function addAmountToCategoryObj(categories, obj) {
     });
   });
   return arrCategory;
-}
+};
 
 module.exports = {
   addAmountToCategoryObj,
