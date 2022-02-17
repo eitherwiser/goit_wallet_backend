@@ -10,14 +10,14 @@ const { countTheBalance } = require("../../helpers/index");
 /*энд-поинт получение всех транзакций пользователя.*/
 router.get("/", authenticate, async (req, res, next) => {
   try {
-    const { page = 1, limit = 3 } = req.query;
+    const { page = 1, limit = 10 } = req.query;
 
-    const { _id, balance } = req.user;
+    const { _id, balance, transactionCategories } = req.user;
     const skip = (page - 1) * limit;
 
     const transaction = await Transaction.find(
       { owner: _id },
-      "-createdAt -updatedAt",
+      "-createdAt -updatedAt -year -month",
       { skip, limit: Number(limit) }
     );
 
