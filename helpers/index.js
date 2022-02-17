@@ -6,11 +6,14 @@ const imgNormalize = require("./file-system/imgNormalize.js");
 const sendEmail = require("./email/sendEmail.js");
 
 //transaction
-const { amountByCategory } = require("./transaction/amountByCategory");
+const { amountByCategory } = require("./statistic/amountByCategory");
 const {
   amountByTransactionType,
-} = require("./transaction/amountByTransactionType");
+} = require("./statistic/amountByTransactionType");
 const { countTheBalance } = require("./transaction/countTheBalance");
+const {
+  addAmountToCategoryObj,
+} = require("./statistic/addAmountToCategoryObj");
 
 module.exports = {
   // file-system
@@ -19,7 +22,9 @@ module.exports = {
   // email
   sendEmail,
   //transaction
+  countTheBalance,
+  //statistic
   amountByCategory,
   amountByTransactionType,
-  countTheBalance,
+  addAmountToCategoryObj,
 };

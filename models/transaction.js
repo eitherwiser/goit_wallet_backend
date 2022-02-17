@@ -11,7 +11,7 @@ const transactionSchema = Schema(
       type: Boolean,
       require: true,
     },
-    category: {
+    categoryId: {
       type: String,
       require: true,
     },
