@@ -1,9 +1,9 @@
 function amountByCategory(arr) {
   return arr.reduce(
-    (acc, { category, amount }) => ({
+    (acc, { categoryId, amount }) => ({
       ...acc,
-      [category]: acc[category]
-        ? (acc[category] * 100 + amount * 100) / 100
+      [categoryId]: acc[categoryId]
+        ? (acc[categoryId] * 100 + amount * 100) / 100
         : amount,
     }),
     {}

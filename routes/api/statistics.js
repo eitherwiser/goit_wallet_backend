@@ -9,6 +9,7 @@ const { Transaction } = require("../../models");
 const {
   amountByCategory,
   amountByTransactionType,
+  addAmountToCategoryObj,
 } = require("../../helpers/index");
 
 /* энд-поинт на получение подробной статистики 
@@ -20,7 +21,7 @@ router.get("/", authenticate, async (req, res, next) => {
       throw new BadRequest(error.message);
     }
 
-    const { _id } = req.user;
+    const { _id, transactionCategories } = req.user;
     const { year, month } = req.body;
 
     const transactions = await Transaction.find({
@@ -33,12 +34,16 @@ router.get("/", authenticate, async (req, res, next) => {
       (transaction) => transaction.isIncome === false
     );
 
-    const categoriesTransaction = amountByCategory(transactionsExpence);
+    const objAmountByCategory = amountByCategory(transactionsExpence);
+    const categoryWithSum = addAmountToCategoryObj(
+      transactionCategories,
+      objAmountByCategory
+    );
     const totalIncome = amountByTransactionType(transactions, true);
     const totalExpence = amountByTransactionType(transactions, false);
 
     const data = {
-      category: { ...categoriesTransaction },
+      category: categoryWithSum,
       total: { Expence: totalExpence, Income: totalIncome },
     };
 
