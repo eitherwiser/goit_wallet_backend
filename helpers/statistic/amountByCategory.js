@@ -1,4 +1,4 @@
-function amountByCategory(arr) {
+const amountByCategory = (arr) => {
   return arr.reduce(
     (acc, { categoryId, amount }) => ({
       ...acc,
@@ -8,7 +8,7 @@ function amountByCategory(arr) {
     }),
     {}
   );
-}
+};
 
 module.exports = {
   amountByCategory,
