@@ -995,7 +995,7 @@
         }
       }
     },
-    "/api/statistics": {
+    "/api/statistics?year=value&month=value": {
       "get": {
         "tags": ["Statistics"],
         "summary": "Get statistic per month by existing categories",
@@ -1003,23 +1003,7 @@
         "requestBody": {
           "description": "Transaction's object",
           "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "year": {
-                    "type": "string",
-                    "example": "2022"
-                  },
-                  "month": {
-                    "type": "string",
-                    "example": "1"
-                  }
-                }
-              }
-            }
-          }
+          "content": {}
         },
         "responses": {
           "200": {
