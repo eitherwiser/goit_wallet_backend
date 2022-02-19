@@ -18,8 +18,8 @@ const getAllTransactions = async (req, res, next) => {
       "-createdAt -updatedAt -year -month",
       { skip, limit: Number(limit) }
     );
-    const categoryIdName = addCategoryIdName(transactionCategories);
-    const TyransactionsWithName = getTransactionsWithName(
+    const categoryIdName = await addCategoryIdName(transactionCategories);
+    const TyransactionsWithName = await getTransactionsWithName(
       transaction,
       categoryIdName
     );
