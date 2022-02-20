@@ -4,7 +4,7 @@ const joiTransactionValidation = Joi.object({
   isIncome: Joi.boolean().required(),
   amount: Joi.number().min(0.01).required(),
   date: Joi.date().required(),
-  categoryId: Joi.string().required(),
+  categoryId: Joi.string(),
   comment: [Joi.string(), Joi.number()],
 });
 

@@ -13,7 +13,7 @@ const transactionSchema = Schema(
     },
     categoryId: {
       type: String,
-      require: true,
+      //require: true,
     },
     date: {
       type: Number,
