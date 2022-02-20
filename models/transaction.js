@@ -13,7 +13,6 @@ const transactionSchema = Schema(
     },
     categoryId: {
       type: String,
-      default: "321344421",
     },
     date: {
       type: Number,
@@ -50,10 +49,10 @@ transactionSchema.pre("save", function (next) {
   next();
 });
 
-transactionSchema.pre("save", function (next) {
+transactionSchema.pre("validate", function (next) {
   const defaultCategoryId = "321344421";
   if (this.categoryId === "") {
-    this.categoryId === defaultCategoryId;
+    this.categoryId = defaultCategoryId;
   }
   next();
 });
