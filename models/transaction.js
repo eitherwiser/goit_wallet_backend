@@ -50,6 +50,14 @@ transactionSchema.pre("save", function (next) {
   next();
 });
 
+transactionSchema.pre("save", function (next) {
+  const defaultCategoryId = "321344421";
+  if (this.categoryId === "") {
+    this.categoryId === defaultCategoryId;
+  }
+  next();
+});
+
 const Transaction = model("transaction", transactionSchema);
 
 module.exports = Transaction;
