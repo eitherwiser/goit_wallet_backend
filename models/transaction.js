@@ -13,8 +13,7 @@ const transactionSchema = Schema(
     },
     categoryId: {
       type: String,
-      require: true,
-      default: "Регулярный доход",
+      default: "321344421",
     },
     date: {
       type: Number,

@@ -71,7 +71,7 @@ const transactionCategories = [
   },
   {
     id: "321344421",
-    name: "Зарплата",
+    name: "Регулярный доход",
     isInc: true,
     color: "#7FC18F",
     isActive: true,
