@@ -1,28 +1,20 @@
 const { BadRequest } = require("http-errors");
 const { Transaction, User } = require("../models");
 const { joiTransactionValidation } = require("../middlewares");
-const {
-  countTheBalance,
-  getTransactionsWithName,
-  addCategoryIdName,
-} = require("../helpers");
+const { countTheBalance, castNumberToTrType } = require("../helpers");
 
 const getAllTransactions = async (req, res, next) => {
   try {
     const { page = 1, limit = 10 } = req.query;
-    const { _id, balance, transactionCategories } = req.user;
+    const { _id, balance } = req.user;
     const skip = (page - 1) * limit;
 
     const transaction = await Transaction.find(
       { owner: _id },
       "-createdAt -updatedAt -year -month",
       { skip, limit: Number(limit) }
-    );
-    //const categoryIdName = await addCategoryIdName(transactionCategories);
-    //const TyransactionsWithName = await getTransactionsWithName(
-    //  transaction,
-    //  categoryIdName
-    //);
+    ).sort({ date: -1 });
+
     const data = {
       balance: balance,
       transactions: [...transaction],
@@ -42,17 +34,47 @@ const createTransactions = async (req, res, next) => {
     }
 
     const { _id, balance } = req.user;
-    const { amount, isIncome } = req.body;
+    const { amount, isIncome, date } = req.body;
     const transactionBalance = countTheBalance(isIncome, balance, amount);
-    const newTransaction = await Transaction.create({
-      ...req.body,
-      owner: _id,
-      balance: transactionBalance,
-    });
 
-    await User.updateOne({ _id }, { balance: transactionBalance });
+    const numberFromType = castNumberToTrType(amount, isIncome);
 
-    res.status(201).json(newTransaction);
+    const trMadeLater = await Transaction.updateMany(
+      { $and: [{ owner: _id }, { date: { $gt: date } }] },
+      { $inc: { balance: numberFromType } }
+    );
+
+    if (trMadeLater.matchedCount > 0) {
+      const trAfterNew = await Transaction.findOne({
+        $and: [{ owner: _id }, { date: { $gt: date } }],
+      });
+
+      const oldBalanc =
+        trAfterNew.balance === undefined ? 0 : trAfterNew.balance;
+
+      const quantityFromType =
+        trAfterNew.amount === undefined || trAfterNew.isIncome === undefined
+          ? 0
+          : castNumberToTrType(trAfterNew.amount, trAfterNew.isIncome);
+
+      const newOldTransaction = await Transaction.create({
+        ...req.body,
+        owner: _id,
+        balance: oldBalanc - quantityFromType,
+      });
+
+      await User.updateOne({ _id }, { balance: transactionBalance });
+      res.status(201).json(newOldTransaction);
+    } else {
+      const newTransaction = await Transaction.create({
+        ...req.body,
+        owner: _id,
+        balance: transactionBalance,
+      });
+
+      await User.updateOne({ _id }, { balance: transactionBalance });
+      res.status(201).json(newTransaction);
+    }
   } catch (error) {
     if (error.message.includes("validation failed")) {
       error.status = 400;
