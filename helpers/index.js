@@ -7,10 +7,7 @@ const sendEmail = require("./email/sendEmail.js");
 
 //transaction
 const { countTheBalance } = require("./transaction/countTheBalance");
-const {
-  getTransactionsWithName,
-} = require("./transaction/getTransactionsWithName");
-const { addCategoryIdName } = require("./transaction/addCategoryIdName");
+const { castNumberToTrType } = require("./transaction/castNumberToTrType");
 //statistic
 const { amountByCategory } = require("./statistic/amountByCategory");
 const {
@@ -28,8 +25,7 @@ module.exports = {
   sendEmail,
   //transaction
   countTheBalance,
-  getTransactionsWithName,
-  addCategoryIdName,
+  castNumberToTrType,
   //statistic
   amountByCategory,
   amountByTransactionType,
